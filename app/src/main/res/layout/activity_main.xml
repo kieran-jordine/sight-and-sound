@@ -6,13 +6,65 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <Space
+        android:id="@id/center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:minWidth="10dp" />
+
+    <Button
+        android:id="@+id/btnCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/code"
+        app:layout_constraintRight_toLeftOf="@id/center"
+        app:layout_constraintTop_toTopOf="@id/center"
+        app:layout_constraintBottom_toBottomOf="@id/center"
+        android:enabled="false" />
+    <Button
+        android:id="@+id/btnFace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/face"
+        app:layout_constraintLeft_toRightOf="@id/center"
+        app:layout_constraintTop_toTopOf="@id/center"
+        app:layout_constraintBottom_toBottomOf="@id/center"
+        android:enabled="false" />
+    <Button
+        android:id="@+id/btnText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text"
+        app:layout_constraintRight_toRightOf="@id/btnCode"
+        app:layout_constraintTop_toBottomOf="@id/btnCode"
+        android:enabled="false" />
+    <Button
+        android:id="@+id/btnObject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/object"
+        app:layout_constraintLeft_toLeftOf="@id/btnFace"
+        app:layout_constraintTop_toBottomOf="@id/btnCode"
+        android:enabled="false" />
+    <Button
+        android:id="@+id/btnLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label"
+        app:layout_constraintRight_toRightOf="@id/btnCode"
+        app:layout_constraintTop_toBottomOf="@id/btnText"
+        android:enabled="false" />
+    <Button
+        android:id="@+id/btnNlp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nl"
+        app:layout_constraintLeft_toLeftOf="@id/btnFace"
+        app:layout_constraintTop_toBottomOf="@id/btnObject"
+        android:enabled="false" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

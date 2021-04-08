@@ -3,4 +3,11 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="code">Code Scanning</string>
+    <string name="face">Face Detection</string>
+    <string name="text">Text Recognition</string>
+    <string name="label">Labelling</string>
+    <string name="nl">Natural Language</string>
+    <string name="object">Object Detection</string>
+    <string name="title_activity_code_scanning">FullscreenActivity</string>
 </resources>

@@ -2,18 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.eularium.sightandsound">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SightAndSound">
         <activity
-            android:name=".FullscreenActivity"
+            android:name=".sight.CodeScanningActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_fullscreen"
-            android:theme="@style/Theme.SightAndSound.Fullscreen"></activity>
+            android:label="@string/title_activity_code_scanning"
+            android:theme="@style/Theme.SightAndSound.Fullscreen" />
+        <activity
+            android:name=".sight.FaceDetectionActivity"
+            android:theme="@style/Theme.SightAndSound.Fullscreen" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
