@@ -3,8 +3,6 @@ package com.eularium.sightandsound.services
 import android.content.Context
 import android.os.Environment
 import android.util.Size
-import android.view.OrientationEventListener
-import android.view.Surface
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -28,28 +26,15 @@ class CameraXController(val context: Context, val previewView: PreviewView, back
     private var analysisExecutor = Executors.newSingleThreadExecutor()
     private var cameraSelector: CameraSelector = if (backCamera) CameraSelector.DEFAULT_BACK_CAMERA else CameraSelector.DEFAULT_FRONT_CAMERA
     private lateinit var camera: Camera
-    private val orientationEventListener = object : OrientationEventListener(context) {
-        override fun onOrientationChanged(orientation: Int) {
-            val rotation = when(orientation) {
-                in 45..134 -> Surface.ROTATION_270
-                in 135..224 -> Surface.ROTATION_180
-                in 225..314 -> Surface.ROTATION_90
-                else -> Surface.ROTATION_0
-            }
-            imageCapture.targetRotation = rotation
-            Toast.makeText(context, rotation.toString(), Toast.LENGTH_SHORT).show()
-        }
-    }
+    private var previewWidth: Int = 0
+    private var previewHeight: Int = 0
 
     init {
-        initialize()
-    }
-
-    fun initialize() {
         val runnable = Runnable {
             cameraProvider = cameraProviderFuture.get()
-            //orientationEventListener.enable()
-
+            //Toast.makeText(context, "".plus(previewView.width).plus(", ").plus(previewView.height), Toast.LENGTH_SHORT).show()
+            previewWidth = previewView.width
+            previewHeight = previewView.height
             buildImagePreview()
             buildImageAnalysis()
             analyzer?.let {
@@ -59,7 +44,7 @@ class CameraXController(val context: Context, val previewView: PreviewView, back
 
             cameraProvider.unbindAll()
             camera = cameraProvider.bindToLifecycle(context as LifecycleOwner, cameraSelector,
-                imagePreview, imageAnalysis, imageCapture)
+                    imagePreview, imageAnalysis, imageCapture)
         }
         cameraProviderFuture.addListener(runnable, ContextCompat.getMainExecutor(context))
     }
@@ -110,11 +95,24 @@ class CameraXController(val context: Context, val previewView: PreviewView, back
                 imagePreview, imageAnalysis, imageCapture)
     }
 
+    fun switchOrientation() {
+        val runnable = Runnable {
+            cameraProvider = cameraProviderFuture.get()
+            previewWidth = previewView.height
+            previewHeight = previewView.width
+            buildImagePreview()
+
+            cameraProvider.unbindAll()
+            camera = cameraProvider.bindToLifecycle(context as LifecycleOwner, cameraSelector,
+                    imagePreview, imageAnalysis, imageCapture)
+        }
+        cameraProviderFuture.addListener(runnable, ContextCompat.getMainExecutor(context))
+    }
+
     private fun buildImagePreview() {
-        Toast.makeText(context, previewView.rotation.toString(), Toast.LENGTH_SHORT).show()
-        Toast.makeText(context, "".plus(previewView.width).plus(", ").plus(previewView.height), Toast.LENGTH_SHORT).show()
         imagePreview = Preview.Builder()
             //.setTargetResolution(Size(previewView.width, previewView.height))
+            .setTargetResolution(Size(previewWidth, previewHeight))
             .build()
         imagePreview.setSurfaceProvider(previewView.surfaceProvider)
     }
@@ -139,5 +137,6 @@ class CameraXController(val context: Context, val previewView: PreviewView, back
     fun destroy() {
         analysisExecutor.shutdown()
     }
+
 
 }

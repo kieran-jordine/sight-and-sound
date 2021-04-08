@@ -1,4 +1,4 @@
-package com.eularium.camerax.vizion
+package com.eularium.sightandsound.sight.analyzers
 
 import android.annotation.SuppressLint
 import android.util.Log

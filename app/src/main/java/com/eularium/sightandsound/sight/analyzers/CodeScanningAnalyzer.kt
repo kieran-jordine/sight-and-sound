@@ -1,7 +1,6 @@
-package com.eularium.camerax.vizion
+package com.eularium.sightandsound.sight.analyzers
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.barcode.Barcode
@@ -9,9 +8,9 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 
-typealias BarcodeListener = (code: List<Barcode>) -> Unit
+typealias CodeScanningListener = (code: List<Barcode>) -> Unit
 
-class BarcodeAnalyzer(private val listener: BarcodeListener) : ImageAnalysis.Analyzer {
+class CodeScanningAnalyzer(private val listener: CodeScanningListener) : ImageAnalysis.Analyzer {
 
     private val options = BarcodeScannerOptions.Builder()
             .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
@@ -22,16 +21,14 @@ class BarcodeAnalyzer(private val listener: BarcodeListener) : ImageAnalysis.Ana
     override fun analyze(image: ImageProxy) {
         val mediaImage = image.image
         if (mediaImage != null) {
-            Log.i("CODE-Rotation", image.imageInfo.rotationDegrees.toString())
             val visionImage = InputImage.fromMediaImage(mediaImage, image.imageInfo.rotationDegrees)
             scanner.process(visionImage)
-                .addOnSuccessListener {
-                    listener(it)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        listener(it.result)
+                    }
+                    image.close()
                 }
-                .addOnFailureListener {
-
-                }
-                .addOnCompleteListener { image.close() }
         }
     }
 

@@ -1,44 +1,50 @@
 package com.eularium.sightandsound.sight
 
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.view.PreviewView
 import com.eularium.sightandsound.databinding.ActivitySightBinding
+import com.eularium.sightandsound.overlay.GraphicOverlay
+import com.eularium.sightandsound.overlay.GraphicRect
 import com.eularium.sightandsound.services.CameraXController
+import com.eularium.sightandsound.sight.analyzers.CodeScanningAnalyzer
 
 class CodeScanningActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySightBinding
 
+    private var isFullScreen = true
     private lateinit var controller: CameraXController
     private lateinit var previewView: PreviewView
-    private var isFullScreen = true
+    private lateinit var graphicOverlay: GraphicOverlay
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySightBinding.inflate(layoutInflater)
         setContentView(binding.root)
         previewView = binding.previewView
-        controller = CameraXController(this, previewView)
-        previewView.setOnClickListener { toggleFullScreen() }
-        previewView.setOnLongClickListener(object: View.OnLongClickListener{
-            override fun onLongClick(v: View?): Boolean {
-                controller.switchCamera()
-                return true
-            }
+        graphicOverlay = binding.graphicOverlay
+        graphicOverlay.setOnClickListener { toggleFullScreen() }
+        graphicOverlay.setOnLongClickListener {
+            controller.switchCamera()
+            true
+        }
+        controller = CameraXController(this, previewView, true, CodeScanningAnalyzer { codes ->
+            graphicOverlay.clear()
+            graphicOverlay.addAll(codes.map { GraphicRect(graphicOverlay, it.boundingBox) })
         })
-        Toast.makeText(this, "on create", Toast.LENGTH_SHORT).show()
+        lifecycle.addObserver(controller)
         fullScreenOn()
     }
 
-    override fun onResume() {
-        super.onResume()
-        controller.initialize()
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        controller.switchOrientation()
     }
 
     private fun fullScreenOn() {

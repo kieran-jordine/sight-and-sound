@@ -52,11 +52,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun enableButtons() {
         binding.btnCode.isEnabled = true
-        binding.btnFace.isEnabled = true
-        binding.btnText.isEnabled = true
-        binding.btnObject.isEnabled = true
-        binding.btnLabel.isEnabled = true
-        binding.btnNlp.isEnabled = true
+        //binding.btnFace.isEnabled = true
+        //binding.btnText.isEnabled = true
+        //binding.btnObject.isEnabled = true
+        //binding.btnLabel.isEnabled = true
+        //binding.btnNlp.isEnabled = true
     }
 
 }
